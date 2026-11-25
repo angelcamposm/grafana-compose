@@ -50,7 +50,27 @@ x-service-defaults: &default-service
 #     networks:
 #       - frontend
 #       - backend
-services: {}
+services:
+  grafana:
+    container_name: grafana
+    environment:
+      - TERM=linux
+    image: ${GRAFANA_IMAGE:-grafana/grafana:latest}
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.grafana.entrypoints=websecure"
+      - "traefik.http.routers.grafana.rule=Host(`grafana.acampos.local`)"
+      - "traefik.http.routers.grafana.service=grafana"
+      - "traefik.http.routers.grafana.tls.certresolver=stepca"
+      - "traefik.http.services.grafana.loadbalancer.server.port=3000"
+    networks:
+      - traefik-proxy
+    ports:
+      - "${GRAFANA_PORT:-3000}:3000"
+    restart: unless-stopped
+    user: "${UID}:${GID}"
+    volumes:
+      - grafana-storage:/var/lib/grafana
 
 networks:
   frontend:
@@ -59,4 +79,6 @@ networks:
     driver: bridge
     internal: true
 
-volumes: {}
+volumes:
+  grafana-storage:
+    driver: local
