@@ -1,0 +1,62 @@
+name: ${COMPOSE_PROJECT_NAME:-project-name}
+
+# Extensiones reutilizables (YAML anchors) para estandarizar servicios.
+x-logging: &default-logging
+  driver: json-file
+  options:
+    max-size: ${LOG_MAX_SIZE:-10m}
+    max-file: "${LOG_MAX_FILE:-3}"
+
+x-security: &default-security
+  security_opt:
+    - no-new-privileges:true
+  cap_drop:
+    - ALL
+
+x-healthcheck: &default-healthcheck
+  interval: ${HEALTHCHECK_INTERVAL:-30s}
+  timeout: ${HEALTHCHECK_TIMEOUT:-5s}
+  retries: ${HEALTHCHECK_RETRIES:-3}
+  start_period: ${HEALTHCHECK_START_PERIOD:-15s}
+
+x-resources: &default-resources
+  limits:
+    cpus: "${DEFAULT_CPU_LIMIT:-1.0}"
+    memory: ${DEFAULT_MEM_LIMIT:-512M}
+  reservations:
+    cpus: "${DEFAULT_CPU_RESERVATION:-0.25}"
+    memory: ${DEFAULT_MEM_RESERVATION:-128M}
+
+x-service-defaults: &default-service
+  <<: *default-security
+  restart: ${RESTART_POLICY:-unless-stopped}
+  init: true
+  stop_grace_period: 30s
+  logging: *default-logging
+  environment:
+    TZ: ${TZ:-UTC}
+
+# Añade aquí los servicios del proyecto reutilizando las anclas anteriores.
+# Ejemplo de estructura:
+# services:
+#   api:
+#     <<: *default-service
+#     image: <imagen>:<tag-fijo>
+#     deploy:
+#       resources: *default-resources
+#     healthcheck:
+#       <<: *default-healthcheck
+#       test: ["CMD", "..."]
+#     networks:
+#       - frontend
+#       - backend
+services: {}
+
+networks:
+  frontend:
+    driver: bridge
+  backend:
+    driver: bridge
+    internal: true
+
+volumes: {}

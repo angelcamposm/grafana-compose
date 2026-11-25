@@ -1,0 +1,17 @@
+# Overlay de desarrollo cargado automáticamente por `docker compose`.
+# Las anclas YAML tienen ámbito de archivo, por lo que se definen aquí para dev.
+
+x-dev-defaults: &dev-defaults
+  restart: "no"
+  pull_policy: missing
+
+# Sobrescrituras habituales de desarrollo (puertos en 127.0.0.1, bind mounts, build local):
+# services:
+#   api:
+#     <<: *dev-defaults
+#     build:
+#       context: .
+#       dockerfile: docker/Dockerfile
+#     ports:
+#       - "127.0.0.1:8080:8080"
+services: {}

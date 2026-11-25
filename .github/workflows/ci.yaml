@@ -1,0 +1,54 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  yamllint:
+    name: Lint YAML
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install yamllint
+        run: python3 -m pip install --no-cache-dir yamllint
+
+      - name: Run yamllint
+        run: yamllint -c .yamllint.yaml .
+
+  compose-validate:
+    name: Validate Docker Compose
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Validate base compose.yaml
+        run: docker compose --env-file .env.example -f compose.yaml config --quiet
+
+      - name: Validate dev overlay (base + override)
+        run: docker compose --env-file .env.example -f compose.yaml -f compose.override.yaml config --quiet
+
+      - name: Validate prod overlay (base + prod)
+        run: docker compose --env-file .env.example -f compose.yaml -f compose.prod.yaml config --quiet
+
+  makefile-check:
+    name: Check Makefile syntax
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Verify Makefile targets
+        run: |
+          make help
+          make -n validate ENV_FILE=.env.example
+          make -n up ENV=dev ENV_FILE=.env.example
+          make -n up ENV=prod ENV_FILE=.env.example

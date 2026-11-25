@@ -1,0 +1,35 @@
+# Control de versiones y CI
+.git
+.github
+.gitignore
+.gitattributes
+.editorconfig
+
+# Archivos de Docker Compose y automatización del repositorio
+compose*.yaml
+compose*.yml
+docker-compose*.yaml
+docker-compose*.yml
+Makefile
+.yamllint.yaml
+
+# Entorno y secretos
+.env
+.env.*
+secrets/
+*.pem
+*.key
+*.crt
+
+# Documentación y datos locales
+README.md
+LICENSE.md
+docs/
+data/
+volumes/
+backups/
+*.log
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

@@ -1,0 +1,15 @@
+# Normalización automática con finales de línea LF para compatibilidad con contenedores Linux
+* text=auto eol=lf
+
+*.yaml text eol=lf
+*.yml text eol=lf
+*.sh text eol=lf
+*.md text eol=lf
+Makefile text eol=lf
+.env.example text eol=lf
+.editorconfig text eol=lf
+.gitignore text eol=lf
+.dockerignore text eol=lf
+.gitattributes text eol=lf
+Dockerfile text eol=lf
+*.Dockerfile text eol=lf

@@ -1,0 +1,16 @@
+# Overlay explícito para producción:
+#   docker compose -f compose.yaml -f compose.prod.yaml up -d
+# Al especificar -f explícitamente, compose.override.yaml NO se carga.
+
+x-prod-defaults: &prod-defaults
+  restart: always
+  read_only: true
+  pull_policy: missing
+  tmpfs:
+    - /tmp:noexec,nosuid,size=64m
+
+# Sobrescrituras habituales de producción (hardening, réplicas, políticas de reinicio):
+# services:
+#   api:
+#     <<: *prod-defaults
+services: {}
