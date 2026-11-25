@@ -1,4 +1,4 @@
-# Docker Compose Project Skeleton
+# Grafana Docker Compose Project
 
 Plantilla base (*skeleton*) genérica y limpia para iniciar nuevos proyectos con **Docker Compose** siguiendo la Compose Specification moderna, buenas prácticas de seguridad, gestión multi-entorno y validación automática en CI.
 
@@ -36,6 +36,7 @@ No incluye servicios de ejemplo activos: parte de un `services: {}` limpio con e
 ## Inicio rápido (Quickstart)
 
 1. **Crea tu nuevo proyecto** a partir de este skeleton y genera tu archivo `.env`:
+
    ```bash
    make init
    ```
@@ -44,6 +45,7 @@ No incluye servicios de ejemplo activos: parte de un `services: {}` limpio con e
 2. **Edita `.env`** y establece al menos `COMPOSE_PROJECT_NAME` con el nombre de tu proyecto.
 
 3. **Añade tus servicios en `compose.yaml`** reutilizando las anclas `x-*`:
+
    ```yaml
    services:
      api:
@@ -60,16 +62,21 @@ No incluye servicios de ejemplo activos: parte de un `services: {}` limpio con e
    ```
 
 4. **Valida la configuración** antes de levantar contenedores:
+
    ```bash
    make validate
    ```
 
 5. **Levanta el stack**:
+
    - En **desarrollo** (`compose.yaml` + `compose.override.yaml`):
+
      ```bash
      make up
      ```
+
    - En **producción** (`compose.yaml` + `compose.prod.yaml`):
+
      ```bash
      make up ENV=prod
      ```
@@ -127,8 +134,10 @@ docker compose -f compose.yaml -f compose.prod.yaml up -d --remove-orphans
 - **Límites de recursos (`*default-resources`):** plantilla de `limits` y `reservations` configurables desde `.env`.
 - **Healthchecks (`*default-healthcheck`):** tiempos base reutilizables para orquestar dependencias con `depends_on` y `condition: service_healthy`.
 - **Segmentación de redes:**
+
   - `frontend`: red bridge para servicios expuestos o con salida externa.
   - `backend`: red bridge marcada con `internal: true` para aislar bases de datos, colas y servicios internos.
+
 - **Etiquetas de imagen fijas:** evita `:latest`; fija versiones explícitas o digests SHA-256.
 - **Configuraciones en solo lectura:** monta archivos desde `config/` con `:ro` (por ejemplo, `./config/app.conf:/etc/app/app.conf:ro`).
 - **Finales de línea `LF`:** garantizados mediante `.editorconfig` y `.gitattributes` para evitar errores al trabajar desde Windows.
